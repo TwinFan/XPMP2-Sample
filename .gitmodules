@@ -1,0 +1,4 @@
+[submodule "XPMP2"]
+	path = lib/XPMP2
+	url = https://github.com/TwinFan/XPMP2
+	branch = sound
