@@ -1,5 +1,6 @@
-# XPMP2 - Set up to be used in the provided docker environment to build lin and mac
-#         Set up to be used in a Visual Studio environment to build win (File > Open > Folder, then VS recognized the CMAKE configuration)
+# XPMP2-Sample
+# - Set up to be used in the provided docker environment to build lin and mac
+# - Set up to be used in a Visual Studio environment to build win (File > Open > Folder, then VS recognized the CMAKE configuration)
 #
 # If you want to build with FMOD sound support,
 # 1. Make sure to understand the FMOD license and attribution requirements:
