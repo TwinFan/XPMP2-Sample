@@ -80,9 +80,9 @@
 /// @see https://www.icao.int/publications/DOC8643/Pages/Search.aspx for ICAO aircraft types
 /// @see https://forums.x-plane.org/index.php?/files/file/37041-bluebell-obj8-csl-packages/ for the Bluebell package, which includes the models named here
 std::string PLANE_MODEL[3][3] = {
-    { "DH8A", "BER", "" },
-    { "B06",  "TXB", "" },
     { "A321", "", "" },         // Not specifying the airline means: XPMP2 will randomly take any airline's model - with every switch of models
+    { "B06",  "TXB", "" },
+    { "DH8D", "BER", "" },
 };
 
 //
@@ -109,6 +109,9 @@ int CBIntPrefsFunc (const char *, [[maybe_unused]] const char * item, int defaul
     // We always want to replace dataRefs and textures upon load to make the most out of the .obj files
     if (!strcmp(item, XPMP_CFG_ITM_REPLDATAREFS)) return 1;
     if (!strcmp(item, XPMP_CFG_ITM_REPLTEXTURE)) return 1;      // actually...this is ON by default anyway, just to be sure
+    // Contrails even close to the ground for demonstration purposes
+    if (!strcmp(item, XPMP_CFG_ITM_CONTR_MIN_ALT)) return 0;
+    if (!strcmp(item, XPMP_CFG_ITM_CONTR_MULTI)) return 1;
 #if DEBUG
     // in debug version of the plugin we provide most complete log output
     if (!strcmp(item, XPMP_CFG_ITM_MODELMATCHING)) return 1;

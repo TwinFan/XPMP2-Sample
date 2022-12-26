@@ -69,6 +69,10 @@ XPMP2-Sample/
   win_x64/
     XPMP2-Sample.xpl
   Resources/
+    Contrail/
+      Contrail.obj
+      Contrail.png
+      Contrail.pss
     CSL/         <-- install CSL models here
     Doc8643.txt
     MapIcons.png
@@ -76,8 +80,8 @@ XPMP2-Sample/
     related.txt
 ```
 
-The individual files under `Resources` listed above, like `Doc8643.txt`, are available
-from `lib/XPMP2/Resources`.
+The individual files listed above under the `Resources` folder, like `Doc8643.txt`, are available
+from `lib/XPMP2/Resources`, including the `Contrail` subfolder.
 
 For the plugin to work properly some CSL models are necessary in some folders
 under `Resources`. All folders under `Resources` are scanned for
