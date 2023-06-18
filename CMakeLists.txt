@@ -26,15 +26,8 @@ else()
 endif()
 
 project(XPMP2-Sample
-        VERSION 3.1.0
+        VERSION 3.2.0
         DESCRIPTION "XPMP2-Sample X-Plane plugin")
-
-# Provide compile macros from the above project version definition
-add_compile_definitions(
-    XPMP2_VERSION="${PROJECT_VERSION}"
-    XPMP2_VER_MAJOR=${PROJECT_VERSION_MAJOR}
-    XPMP2_VER_MINOR=${PROJECT_VERSION_MINOR}
-)
 
 message ("== Building: ${PROJECT_NAME} ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH} ==")
 message ("Compiler Info:")
@@ -59,9 +52,9 @@ if (WIN32)
         set(ENV{platform} "win")
     endif()
 elseif(APPLE)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET 11.0)
-    add_compile_options(-mmacosx-version-min=11.0)
-    add_link_options(-mmacosx-version-min=11.0)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.15)
+    add_compile_options(-mmacosx-version-min=10.15)
+    add_link_options(-mmacosx-version-min=10.15)
 endif()
 
 ################################################################################
@@ -77,7 +70,7 @@ set_property(GLOBAL PROPERTY CXX_STANDARD 17)
 ################################################################################
 
 # Enable all X-Plane SDK APIs up to the newest version.
-add_compile_definitions(XPLM200=1 XPLM210=1 XPLM300=1 XPLM301=1 XPLM303=1)
+add_compile_definitions(XPLM200=1 XPLM210=1 XPLM300=1 XPLM301=1 XPLM303=1 XPLM400=1)
 
 # Define platform macros.
 add_compile_definitions(APL=$<BOOL:${APPLE}> IBM=$<BOOL:${WIN32}> LIN=$<AND:$<BOOL:${UNIX}>,$<NOT:$<BOOL:${APPLE}>>>)
@@ -136,7 +129,7 @@ add_library(XPMP2-Sample MODULE
 # Header include directories
 target_include_directories(XPMP2-Sample PRIVATE
     ${ADDITIONAL_INCLUDES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib/SDK/CHeaders/XPLM
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/XPMP2/lib/SDK/CHeaders/XPLM
     ${CMAKE_CURRENT_SOURCE_DIR}/lib/XPMP2/inc
 )
 
@@ -149,10 +142,10 @@ target_include_directories(XPMP2-Sample PRIVATE
 # XPMP2 path is hard-coded. Couldn't convince find_library to distinguish libXPMP2.a from XPMP2.lib in Mingw vs MSVC build.
 if (APPLE)
     list(APPEND CMAKE_FRAMEWORK_PATH
-         "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDK/Libraries/Mac")
+         "${CMAKE_CURRENT_SOURCE_DIR}/lib/XPMP2/lib/SDK/Libraries/Mac")
 else ()
     list(APPEND CMAKE_LIBRARY_PATH
-         "${CMAKE_CURRENT_SOURCE_DIR}/lib/SDK/Libraries/Win")
+         "${CMAKE_CURRENT_SOURCE_DIR}/lib/XPMP2/lib/SDK/Libraries/Win")
 endif ()
 
 # FMOD Library only if requested

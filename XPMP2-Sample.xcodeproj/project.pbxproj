@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		254A0B7A2918533F004CA228 /* XPLM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254A0B792918533F004CA228 /* XPLM.framework */; };
 		254A0B7C29185357004CA228 /* libfmod.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 254A0B7B29185357004CA228 /* libfmod.dylib */; };
 		254A0B89291853EF004CA228 /* XPMP2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254A0B84291853CD004CA228 /* XPMP2.framework */; };
 		2572C40623D88802006A7726 /* XPMP2-Sample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2572C40523D88802006A7726 /* XPMP2-Sample.cpp */; };
+		25F4A2E72A3F9CF8002509C3 /* XPLM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25F4A2E62A3F9CF8002509C3 /* XPLM.framework */; };
 		D6A7BDC116A1DEC000D1426A /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6A7BDC016A1DEC000D1426A /* CoreFoundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -59,6 +59,7 @@
 		254A0B7D291853CD004CA228 /* XPMP2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = XPMP2.xcodeproj; path = lib/XPMP2/XPMP2.xcodeproj; sourceTree = "<group>"; };
 		2572C40523D88802006A7726 /* XPMP2-Sample.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "XPMP2-Sample.cpp"; sourceTree = "<group>"; };
 		25A0F27323E8B906007D6B6E /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		25F4A2E62A3F9CF8002509C3 /* XPLM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XPLM.framework; path = lib/XPMP2/lib/SDK/Libraries/Mac/XPLM.framework; sourceTree = "<group>"; };
 		D607B19909A556E400699BC3 /* XPMP2-Sample.xpl */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "XPMP2-Sample.xpl"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6A7BDA916A1DEA200D1426A /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		D6A7BDC016A1DEC000D1426A /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -71,7 +72,7 @@
 			files = (
 				D6A7BDC116A1DEC000D1426A /* CoreFoundation.framework in Frameworks */,
 				254A0B7C29185357004CA228 /* libfmod.dylib in Frameworks */,
-				254A0B7A2918533F004CA228 /* XPLM.framework in Frameworks */,
+				25F4A2E72A3F9CF8002509C3 /* XPLM.framework in Frameworks */,
 				254A0B89291853EF004CA228 /* XPMP2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -116,6 +117,7 @@
 		D6A7BDAD16A1DEA700D1426A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				25F4A2E62A3F9CF8002509C3 /* XPLM.framework */,
 				254A0B7D291853CD004CA228 /* XPMP2.xcodeproj */,
 				254A0B7B29185357004CA228 /* libfmod.dylib */,
 				254A0B792918533F004CA228 /* XPLM.framework */,
@@ -251,7 +253,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				EXECUTABLE_EXTENSION = xpl;
-				FRAMEWORK_SEARCH_PATHS = lib/SDK/Libraries/Mac;
+				FRAMEWORK_SEARCH_PATHS = lib/XPMP2/lib/SDK/Libraries/Mac;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -286,7 +288,7 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					lib/SDK/CHeaders/XPLM,
+					lib/XPMP2/lib/SDK/CHeaders/XPLM,
 					lib/XPMP2/inc,
 					"$(HEADER_SEARCH_PATHS)",
 				);
@@ -356,7 +358,7 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				EXECUTABLE_EXTENSION = xpl;
-				FRAMEWORK_SEARCH_PATHS = lib/SDK/Libraries/Mac;
+				FRAMEWORK_SEARCH_PATHS = lib/XPMP2/lib/SDK/Libraries/Mac;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -390,7 +392,7 @@
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					lib/SDK/CHeaders/XPLM,
+					lib/XPMP2/lib/SDK/CHeaders/XPLM,
 					lib/XPMP2/inc,
 					"$(HEADER_SEARCH_PATHS)",
 				);
