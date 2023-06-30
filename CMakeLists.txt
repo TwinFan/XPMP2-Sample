@@ -26,7 +26,7 @@ else()
 endif()
 
 project(XPMP2-Sample
-        VERSION 3.2.0
+        VERSION 3.3.0
         DESCRIPTION "XPMP2-Sample X-Plane plugin")
 
 message ("== Building: ${PROJECT_NAME} ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH} ==")
