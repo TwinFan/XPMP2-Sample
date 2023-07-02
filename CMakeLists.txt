@@ -151,7 +151,7 @@ endif ()
 # FMOD Library only if requested
 if(INCLUDE_FMOD_SOUND)
     # Compile options
-    add_compile_definitions(INCLUDE_FMOD_SOUND)
+    add_compile_definitions(INCLUDE_FMOD_SOUND=1)
 
     # Link Options (only for Win/Mac)
     if(WIN32 OR APPLE)
