@@ -78,6 +78,7 @@ XPMP2-Sample/
     MapIcons.png
     Obj8DataRefs.txt
     related.txt
+    relOp.txt
 ```
 
 The individual files listed above under the `Resources` folder, like `Doc8643.txt`, are available

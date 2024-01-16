@@ -80,7 +80,7 @@
 /// @see https://www.icao.int/publications/DOC8643/Pages/Search.aspx for ICAO aircraft types
 /// @see https://forums.x-plane.org/index.php?/files/file/37041-bluebell-obj8-csl-packages/ for the Bluebell package, which includes the models named here
 std::string PLANE_MODEL[3][3] = {
-    { "A321", "", "" },         // Not specifying the airline means: XPMP2 will randomly take any airline's model - with every switch of models
+    { "A321", "EUK", "" },         // Don't have A321_EUK, shall find A320_EIN via related.txt and relOp.txt
     { "B06",  "TXB", "" },
     { "DH8D", "BER", "" },
 };
@@ -114,7 +114,7 @@ int CBIntPrefsFunc (const char *, [[maybe_unused]] const char * item, int defaul
     if (!strcmp(item, XPMP_CFG_ITM_CONTR_MULTI)) return 1;
 #if DEBUG
     // in debug version of the plugin we provide most complete log output
-    if (!strcmp(item, XPMP_CFG_ITM_MODELMATCHING)) return 1;
+    if (!strcmp(item, XPMP_CFG_ITM_MODELMATCHING)) return 0;    // though...no model
     if (!strcmp(item, XPMP_CFG_ITM_LOGLEVEL)) return 0;       // DEBUG logging level
 #endif
     // Otherwise we just accept defaults
