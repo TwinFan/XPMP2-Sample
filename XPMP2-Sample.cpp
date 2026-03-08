@@ -85,6 +85,36 @@ std::string PLANE_MODEL[3][3] = {
     { "DH8D", "BER", "" },
 };
 
+/// menu id of our plugin's menu
+XPLMMenuID hMenu = nullptr;
+#if INCLUDE_FMOD_SOUND + 0 >= 1
+XPLMMenuID hSubMenuAudioDevs = nullptr;
+#endif
+
+/// List of all menu item indexes
+enum MenuItemsTy {
+    MENU_PLANES = 0,        ///< Menu Item "Toggle Planes"
+    MENU_VISIBLE,           ///< Menu Item "Toggle Visibility"
+    MENU_FREEZE,            ///< Menu Item "Freeze"
+    MENU_CYCLE_MDL,         ///< Menu Item "Cycle Models"
+    MENU_REMATCH_MDL,       ///< Menu Item "Rematch Models"
+    MENU_AI,                ///< Menu Item "Toggle AI control"
+#if INCLUDE_FMOD_SOUND + 0 >= 1
+    MENU_SUB_AUDIODEVS,     ///< Submenu "Audio Devices"
+#endif
+#ifdef DEBUG
+    MENU_RELOAD_PLUGINS,    ///< Menu Item "Reload Plugins", a Dev support activity
+#endif
+};
+
+/// Forward declaration for the update checkmarks function
+void MenuUpdateCheckmarks ();
+
+#if INCLUDE_FMOD_SOUND + 0 >= 1
+/// List of audio devices
+std::vector<std::string> vecAudioDev;
+#endif
+
 //
 // MARK: Utility Functions
 //
@@ -112,6 +142,8 @@ int CBIntPrefsFunc (const char *, [[maybe_unused]] const char * item, int defaul
     // Contrails even close to the ground for demonstration purposes
     if (!strcmp(item, XPMP_CFG_ITM_CONTR_MIN_ALT)) return 0;
     if (!strcmp(item, XPMP_CFG_ITM_CONTR_MULTI)) return 1;
+    // Here we can enforce a separate FMOD instance if we return 1
+    if (!strcmp(item, XPMP_CFG_ITM_FMOD_INSTANCE)) return 1;
 #if DEBUG
     // in debug version of the plugin we provide most complete log output
     if (!strcmp(item, XPMP_CFG_ITM_MODELMATCHING)) return 0;    // though...no model
@@ -141,11 +173,26 @@ void CBPlaneNotifier(XPMPPlaneID            inPlaneID,
     }
 }
 
-#if defined(DEBUG) && (INCLUDE_FMOD_SOUND + 0 >= 1)
-/// Just for purposes of testing this functionality, we list all loaded sounds
-void DebugListLoadedSoundNames()
+#if INCLUDE_FMOD_SOUND + 0 >= 1
+/// Submenu Handler for switching output Audio Devices
+void MenuAudioDevice (void* /*inMenuRef*/, void* inItemRef)
+{
+    size_t iSndDev = reinterpret_cast<unsigned long long>(inItemRef);
+    if (iSndDev < vecAudioDev.size()) {
+        LogMsg("XPMP2-Sample: Switching to Audio Device '%s' (%d)",
+               vecAudioDev[iSndDev].c_str(), int(iSndDev));
+        XPMPSoundSetAudioDevice(int(iSndDev));
+//        XPMPSoundSetAudioDeviceName(vecAudioDev[iSndDev]);
+        MenuUpdateCheckmarks();
+    }
+}
+
+/// Just for purposes of testing this functionality, we list all loaded sounds and audio devices
+void ListSoundStuff()
 {
     int i = 0;
+#ifdef DEBUG
+    // List all loaded sounds...that is rarely really useful, here just for debugging purposes
     const char *filePath = nullptr, *sndName = nullptr;
     for (sndName = XPMPSoundEnumerate(nullptr, &filePath);
          sndName != nullptr;
@@ -153,6 +200,29 @@ void DebugListLoadedSoundNames()
     {
         LogMsg("XPMP2-Sample: %2d. Sound: `%s`, loaded from `%s`",
                ++i, sndName, filePath ? filePath : "?");
+    }
+#endif
+    // Fetch all audio devices
+    vecAudioDev.clear();
+    std::string devName;
+    for (i = 0; XPMPSoundGetAudioDeviceName(i, devName); i++) {
+        LogMsg("XPMP2-Sample: %2d. Audio Device: '%s'",
+               i, devName.c_str());
+        vecAudioDev.push_back(devName);
+    }
+    
+    // What's the active one?
+    const int activeDev = XPMPSoundGetActiveAudioDevice(&devName);
+    LogMsg("XPMP2-Sample: Active Audio Device is '%s' (%d)",
+           devName.c_str(), activeDev);
+    
+    // Create a submenu for the audio devices
+    int idAudioMenu = XPLMAppendMenuItem(hMenu, "Audio Devices", (void*)MENU_SUB_AUDIODEVS, 0);
+    hSubMenuAudioDevs = XPLMCreateMenu("Audio Devices", hMenu, idAudioMenu, MenuAudioDevice, nullptr);
+    for (size_t n = 0; n < vecAudioDev.size(); n++) {
+        XPLMAppendMenuItem(hSubMenuAudioDevs, vecAudioDev[n].c_str(), (void*)n, 0);
+        if (int(n) == activeDev)
+            XPLMCheckMenuItem(hSubMenuAudioDevs, int(n), xplm_Menu_Checked);
     }
 }
 #endif
@@ -733,19 +803,6 @@ XPMPPlaneCallbackResult CBPlaneData (XPMPPlaneID         inPlane,
 // MARK: Menu functionality
 //
 
-/// menu id of our plugin's menu
-XPLMMenuID hMenu = nullptr;
-
-/// List of all menu item indexes
-enum MenuItemsTy {
-    MENU_PLANES = 0,        ///< Menu Item "Toggle Planes"
-    MENU_VISIBLE,           ///< Menu Item "Toggle Visibility"
-    MENU_FREEZE,            ///< Menu Item "Freeze"
-    MENU_CYCLE_MDL,         ///< Menu Item "Cycle Models"
-    MENU_REMATCH_MDL,       ///< Menu Item "Rematch Models"
-    MENU_AI,                ///< Menu Item "Toggle AI control"
-};
-
 /// Planes currently visible?
 bool gbVisible = true;
 
@@ -901,6 +958,16 @@ void MenuUpdateCheckmarks ()
     XPLMCheckMenuItem(hMenu, MENU_VISIBLE,  gbVisible                    ? xplm_Menu_Checked : xplm_Menu_Unchecked);
     XPLMCheckMenuItem(hMenu, MENU_FREEZE,   gbFreeze                     ? xplm_Menu_Checked : xplm_Menu_Unchecked);
     XPLMCheckMenuItem(hMenu, MENU_AI,       XPMPHasControlOfAIAircraft() ? xplm_Menu_Checked : xplm_Menu_Unchecked);
+    
+#if INCLUDE_FMOD_SOUND + 0 >= 1
+    // What's the active Sound device?
+    const int activeDev = XPMPSoundGetActiveAudioDevice();
+    
+    // Set the Audio Device sub menu check marks, assumes they are in synch with vecAudioDev
+    for (size_t n = 0; n < vecAudioDev.size(); n++)
+        XPLMCheckMenuItem(hSubMenuAudioDevs, int(n), int(n) == activeDev ? xplm_Menu_Checked : xplm_Menu_Unchecked);
+
+#endif
 }
 
 /// Callback function for the case that we might get AI access later
@@ -946,6 +1013,15 @@ void CBMenu (void* /*inMenuRef*/, void* inItemRef)
                 // When requested by menu we actually wait via callback to get control
                 XPMPMultiplayerEnable(CPRequestAIAgain);
             break;
+#if INCLUDE_FMOD_SOUND + 0 >= 1
+        case MENU_SUB_AUDIODEVS:                // Submenu...shouldn't be called, just to silence compiler warnings
+            break;
+#endif
+#ifdef DEBUG
+        case MENU_RELOAD_PLUGINS:               // Reload Plugins
+            XPLMReloadPlugins();
+            break;
+#endif
     }
 
     // Update menu items' checkmarks
@@ -1014,10 +1090,18 @@ PLUGIN_API int XPluginEnable(void)
         LogMsg("XPMP2-Sample: Error while loading CSL packages: %s", res);
     }
 
-#if defined(DEBUG) && (INCLUDE_FMOD_SOUND + 0 >= 1)
+#if INCLUDE_FMOD_SOUND + 0 >= 1
     // Just for purposes of testing this functionality, we list all loaded sounds
-    // (This is likely not required in your plugin)
-    DebugListLoadedSoundNames();
+    // and sound devices.
+    ListSoundStuff();
+    
+    // With the audio devices known we can add a dynamic menu to switch between devices
+    
+#endif
+    
+    // Lastly, add a menu item to make development simpler
+#ifdef DEBUG
+    XPLMAppendMenuItem(hMenu, "Reload Plugins",     (void*)MENU_RELOAD_PLUGINS, 0);
 #endif
     
     // Now we also try to get control of AI planes. That's optional, though,
